@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CHICKENARIUM — Front Page</title>
+  <link rel="stylesheet" href="Fpage.css" />
+  <link rel="stylesheet" href="media.css" />
+</head>
+<body>
+  <header class="topnav">
+    <div class="container nav-inner">
+      <a class="brand" href="Fpage.html">🐔 CHICKENARIUM</a>
+      <button id="menuBtn" class="menu-btn" aria-label="Toggle menu">☰</button>
+      <nav id="siteNav" class="nav-links">
+        <a href="#home" class="active">Home</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#history">History</a>
+        <a href="#settings">Settings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="home" class="hero">
+      <div class="hero-left">
+        <h1>Protecting Philippine Chicken Farms from HPAI</h1>
+        <p class="lead">CHICKENARIUM combines lightweight monitoring and practical guidance to help farmers, vets, and policymakers reduce the risk and impact of Highly Pathogenic Avian Influenza (HPAI) across the Philippines.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#monitoring">View Monitoring</a>
+          <a class="btn ghost" href="#history">Read Reports</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="illustration">🐣</div>
+      </div>
+    </section>
+
+    <section id="monitoring" class="info-grid">
+      <article class="card">
+        <h3>Real-time Monitoring</h3>
+        <p>Sensor and flock-health inputs aggregated into a clear dashboard for early detection and rapid response.</p>
+      </article>
+
+      <article class="card">
+        <h3>Industry Impact</h3>
+        <p>HPAI outbreaks affect production, livelihoods, and food security — our tools help quantify and mitigate those risks.</p>
+      </article>
+
+      <article class="card">
+        <h3>Best Practices</h3>
+        <p>Biosecurity checklists, vaccination guidance, and simple farm management steps tailored for Philippine conditions.</p>
+      </article>
+
+      <article class="card">
+        <h3>Resources</h3>
+        <p>Links to DA-ATI, BFAR guidelines, research briefs, and local support networks for farmers.</p>
+      </article>
+    </section>
+
+    <section id="history" class="history">
+      <h2>Monitoring History & Outbreak Summary</h2>
+      <p>Summary of recent detection events, trends by region, and notes for incident response teams.</p>
+      <div class="history-list">
+        <div class="history-item"><strong>Region:</strong> Central Luzon — <em>Increased alerts</em></div>
+        <div class="history-item"><strong>Region:</strong> Western Visayas — <em>Stable</em></div>
+        <div class="history-item"><strong>Region:</strong> Davao Region — <em>Watch</em></div>
+      </div>
+    </section>
+
+    <section id="settings" class="settings">
+      <h2>Settings</h2>
+      <p>Configure alert thresholds, add farm locations, and manage user access.</p>
+      <div class="settings-grid">
+        <div class="small-card">Alerts</div>
+        <div class="small-card">Farms</div>
+        <div class="small-card">Users</div>
+        <div class="small-card">Integrations</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© CHICKENARIUM — Research project on HPAI and poultry resilience in the Philippines.</p>
+      <p>Contact: <a href="mailto:team@chickenarium.local">team@chickenarium.local</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // small menu toggle for mobile
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('siteNav');
+      btn.addEventListener('click', ()=> nav.classList.toggle('open'));
+    });
+  </script>
+</body>
+</html>
