@@ -1,0 +1,18 @@
+/* Navbar.css — shared nav styles used by site pages */
+.topnav{background:transparent;border-bottom:1px solid rgba(0,0,0,0.04);position:sticky;top:0;z-index:40}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+.brand{font-weight:700;color:#222;text-decoration:none;font-size:1.05rem}
+.nav-links{display:flex;gap:12px;align-items:center}
+.nav-links a{color:#6b5e53;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600}
+.nav-links a.active, .nav-links a:hover{background:rgba(247,148,30,0.08);color:#F7941E}
+.menu-btn{display:none;background:transparent;border:0;font-size:1.25rem;padding:6px;cursor:pointer}
+
+/* mobile: hide inline nav, show menu button */
+@media (max-width:640px){
+  .nav-links{display:none}
+  .menu-btn{display:inline-block}
+  .nav-links.open{display:flex;position:absolute;right:16px;top:56px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 12px 30px rgba(20,10,0,0.08);flex-direction:column}
+}
+
+/* small transitions */
+.nav-links a{transition:background 150ms,color 150ms}
