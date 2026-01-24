@@ -5,7 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>History — CHICKENARIUM</title>
   <link rel="stylesheet" href="Navbar.css" />
-  <style>body{font-family:Inter,Segoe UI,Arial,sans-serif;margin:0;background:#FFFBF2;color:#222}.container{max-width:1000px;margin:0 auto;padding:20px}</style>
+  <style>
+    body {
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      margin:0;
+      background:#FFFBF2;
+      color:#222;
+    }
+    .container {
+      max-width:1000px;
+      margin:0 auto;
+      padding:20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2e5d5;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #fff8f0;
+    }
+    tbody tr:hover {
+      background-color: #ffe0b2;
+    }
+  </style>
 </head>
 <body>
   <header class="topnav">
@@ -24,6 +57,34 @@
   <main class="container">
     <h1>History & Reports</h1>
     <p>Past detection events, incident notes, and regional summaries will be listed here.</p>
+
+    <!-- Table for Chicken Vocal Records -->
+    <table id="chickenRecords">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Vocal Type</th>
+          <th>Health Status</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody id="recordsBody">
+        <!-- Example placeholder rows for SQL result -->
+        <tr>
+          <td>2026-01-24 08:15:12</td>
+          <td>chicken_crow</td>
+          <td>NORMAL</td>
+          <td>Normal pitch and frequency pattern</td>
+        </tr>
+        <tr>
+          <td>2026-01-24 09:02:45</td>
+          <td>chicken_crow</td>
+          <td>SUSPECTED</td>
+          <td>Abnormal pitch and reduced vocal strength detected</td>
+        </tr>
+        <!-- Backend / JS can dynamically add more rows here -->
+      </tbody>
+    </table>
   </main>
 
   <script>
