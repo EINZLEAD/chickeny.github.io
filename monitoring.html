@@ -105,12 +105,11 @@
       Farm Status: Healthy
     </div>
 
-    <!-- Suspected summary -->
+
     <div class="summary">
       Total Suspected Chickens: <span id="suspectedCount">0</span>
     </div>
 
-    <!-- Monitoring Table -->
     <table id="monitoringTable">
       <thead>
         <tr>
@@ -121,7 +120,6 @@
         </tr>
       </thead>
       <tbody id="monitoringBody">
-        <!-- Placeholder rows -->
         <tr>
           <td>2026-01-24 08:15:12</td>
           <td>NORMAL</td>
@@ -145,7 +143,7 @@
       btn.addEventListener('click', ()=> nav.classList.toggle('open'));
     });
 
-    // JS function to dynamically add row and update suspected count & farm status
+    //update suspected count & farm status
     function addMonitoringRow(time, status, symptoms, remarks) {
       const tbody = document.getElementById('monitoringBody');
       const row = document.createElement('tr');
@@ -155,7 +153,7 @@
         <td>${symptoms}</td>
         <td>${remarks}</td>
       `;
-      tbody.prepend(row); // newest on top
+      tbody.prepend(row); 
 
       // Update suspected count
       const countEl = document.getElementById('suspectedCount');
@@ -174,8 +172,7 @@
       }
     }
 
-    // Example dynamic update (replace with backend/AJAX)
-    // addMonitoringRow('2026-01-24 10:30:00', 'SUSPECTED', 'Diarrhea, Swollen comb', 'Check individual birds');
+    
   </script>
 </body>
 </html>
