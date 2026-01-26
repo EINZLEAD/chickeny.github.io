@@ -6,27 +6,99 @@
   <title>Monitoring — CHICKENARIUM</title>
   <link rel="stylesheet" href="Navbar.css" />
   <style>
-    body{font-family:Inter,Segoe UI,Arial,sans-serif;margin:0;background:#FFFBF2;color:#222}
-    .container{max-width:1000px;margin:0 auto;padding:20px}
-    .video-container{text-align:center;margin-bottom:20px}
-    video{width:100%;max-width:800px;border:2px solid #ccc;border-radius:8px}
-    .status-banner{padding:15px;border-radius:8px;margin-bottom:10px;font-size:18px;background:#d4edda}
-    .status-banner.problem{background:#f8d7da}
-    .summary{background:#fff8f0;padding:15px;border-radius:8px;border:1px solid #ccc;margin-bottom:20px}
-    table{width:100%;border-collapse:collapse}
-    table,th,td{border:1px solid #ccc}
-    th,td{padding:10px}
-    th{background:#f2e5d5}
-      .footer-inner{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px
+    /* BASIC LAYOUT STYLES */
+    body { font-family: Inter, Segoe UI, Arial, sans-serif; margin: 0; background: #FFFBF2; color: #222; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    
+    /* VIDEO PLAYER STYLES (NEW) */
+    .video-container { text-align: center; margin-bottom: 20px; }
+    
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9; /* Para laging rectangle kahit walang video */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
-    .footer-inner a{
-      color:var(--accent-dark);
-      text-decoration:none
+
+    video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
+
+    /* OVERLAY & BUTTON STYLES */
+    .video-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6); /* Dark tint */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .play-btn {
+      background-color: #F7941E; /* Chickenarium Orange */
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      font-size: 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-top: 15px;
+      transition: transform 0.2s, background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.05);
+      background-color: #d67d15;
+    }
+
+    /* LOADING SPINNER */
+    .loading-spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid #F7941E;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+      display: none; /* Hidden by default */
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* UTILITY CLASS */
+    .hidden { display: none !important; }
+
+    /* STATUS & TABLE STYLES */
+    .status-banner { padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 18px; background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+    .status-banner.problem { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+    
+    .summary { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f9f5ec; font-weight: 600; color: #444; }
+    tr:last-child td { border-bottom: none; }
+
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 40px; padding-bottom: 20px; color: #666; font-size: 0.9rem; }
+    .footer-inner a { color: #F7941E; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -45,19 +117,37 @@
 </header>
 
 <main class="container">
-  <h1>Monitoring</h1>
+  <h1>Monitoring Dashboard</h1>
 
   <div class="video-container">
-    <h2>Live Chicken Feed</h2>
-    <video autoplay muted playsinline>
-      <source src="http://YOUR_CAMERA_IP/stream" type="video/mp4">
-    </video>
+    <div class="video-wrapper">
+      
+      <div id="cameraOverlay" class="video-overlay">
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <div id="overlayContent" style="text-align:center">
+          <div style="font-size: 48px; margin-bottom: 10px;">📹</div>
+          <h3 style="margin:0;">Live Chicken Feed</h3>
+          <p style="opacity: 0.9; margin: 5px 0 0;">Connection Required</p>
+          <button class="play-btn" onclick="startCamera()">
+            ▶ Watch Live
+          </button>
+        </div>
+      </div>
+
+      <video id="chickenCam" playsinline controls>
+        <source type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+      <span style="color:red">●</span> Live Stream (Click to activate)
+    </p>
   </div>
 
   <div id="farmStatus" class="status-banner">Farm Status: Healthy</div>
 
   <div class="summary">
-    Total Suspected Chickens: <span id="suspectedCount">0</span>
+    <strong>Current Analysis:</strong> Total Suspected Chickens: <span id="suspectedCount" style="font-weight:bold; color:red">0</span>
   </div>
 
   <table>
@@ -70,17 +160,66 @@
       </tr>
     </thead>
     <tbody id="monitoringBody">
-      <tr><td colspan="4">Loading data...</td></tr>
+      <tr><td colspan="4" style="text-align:center; color:#888;">Waiting for data update...</td></tr>
     </tbody>
   </table>
 </main>
+
 <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© CHICKENARIUM — Research project on HPAI and poultry resilience in the Philippines.</p>
-      <p>Contact: <a href="mailto:team@chickenarium.local">team@chickenarium.local</a></p>
-    </div>
+  <div class="container footer-inner">
+    <p>© CHICKENARIUM — Research project on HPAI.</p>
+    <p>Contact: <a href="mailto:team@chickenarium.local">team@chickenarium.local</a></p>
+  </div>
 </footer>
 
+<script>
+  // 1. MENU TOGGLE (Mobile)
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('menuBtn');
+    const nav = document.getElementById('siteNav');
+    if(btn) btn.addEventListener('click', () => nav.classList.toggle('open'));
+  });
+
+  // 2. CAMERA FUNCTION (Click to Play)
+  function startCamera() {
+    const video = document.getElementById('chickenCam');
+    const overlay = document.getElementById('cameraOverlay');
+    const content = document.getElementById('overlayContent');
+    const spinner = document.getElementById('loadingSpinner');
+    
+    // --- SETTINGS ---
+    // IMPORTANT: Palitan mo ito ng totoong IP ng camera mo
+    const cameraURL = "http://YOUR_CAMERA_IP/stream"; 
+    // ----------------
+    
+    // UI Updates: Tago text, labas spinner
+    content.style.display = 'none';
+    spinner.style.display = 'block';
+
+    // Set source if not yet set
+    if (!video.src || video.src === window.location.href) {
+       video.src = cameraURL;
+    }
+
+    // Try to play
+    video.play()
+      .then(() => {
+        // Success: Hide overlay completely
+        overlay.classList.add('hidden');
+      })
+      .catch(error => {
+        console.error("Video Error:", error);
+        alert("Cannot connect to camera at " + cameraURL + ". Please check connection.");
+        
+        // Reset UI if failed
+        spinner.style.display = 'none';
+        content.style.display = 'block';
+        video.src = ""; // Clear source to stop loading
+      });
+  }
+</script>
+
 <script src="js/monitoring.js"></script>
+
 </body>
 </html>
