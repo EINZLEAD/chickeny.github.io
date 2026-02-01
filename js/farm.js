@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("owner_name").value = data.owner_name || "";
       document.getElementById("owner_phone").value = data.owner_phone || "";
       document.getElementById("owner_email").value = data.owner_email || "";
-      document.getElementById("suspected_threshold").value = data.suspected_threshold || "";
+      if(document.getElementById("suspected_threshold")) document.getElementById("suspected_threshold").value = data.suspected_threshold || "";
       document.getElementById("farm_location").value = data.farm_location || "";
       if(document.getElementById("timezone")) document.getElementById("timezone").value = data.timezone || "UTC";
       if(document.getElementById("units")) document.getElementById("units").value = data.units || "metric";
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       owner_name: document.getElementById("owner_name").value,
       owner_phone: document.getElementById("owner_phone").value,
       owner_email: document.getElementById("owner_email").value,
-      suspected_threshold: parseInt(document.getElementById("suspected_threshold").value, 10) || 0,
+      // suspected_threshold removed from UI; do not include in payload
       farm_location: document.getElementById("farm_location").value,
       timezone: document.getElementById("timezone").value,
       units: document.getElementById("units").value,
