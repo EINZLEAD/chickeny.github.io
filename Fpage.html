@@ -6,7 +6,39 @@
   <title>CHICKENARIUM — Front Page</title>
   <link rel="stylesheet" href="Fpage.css" />
   <link rel="stylesheet" href="media.css" />
+
+  <!-- ADDITIONAL CSS (FOR POPUP ONLY) -->
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #fff;
+      max-width: 600px;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .modal-close {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .card {
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
   <header class="topnav">
     <div class="container nav-inner">
@@ -16,84 +48,144 @@
         <a href="Fpage.html" class="active">Home</a>
         <a href="monitoring.html">Monitoring</a>
         <a href="history.html">History</a>
-        <a href="farm.html">Farm</a>
+        <a href="settings.html">Settings</a>
       </nav>
     </div>
   </header>
 
-  <main class="container">
-    <section id="home" class="hero">
-      <div class="hero-left">
-        <h1>Protecting Philippine Chicken Farms from HPAI</h1>
-        <p class="lead">CHICKENARIUM combines lightweight monitoring and practical guidance to help farmers, vets, and policymakers reduce the risk and impact of Highly Pathogenic Avian Influenza (HPAI) across the Philippines.</p>
-        <div class="hero-cta">
-          <a class="btn" href="#monitoring">View Monitoring</a>
-          <a class="btn ghost" href="#history">Read Reports</a>
-        </div>
-      </div>
-      <div class="hero-right">
-        <div class="illustration">🐣</div>
-      </div>
-    </section>
+<main class="container">
 
-    <section id="monitoring" class="info-grid">
-      <article class="card">
-        <h3>Real-time Monitoring</h3>
-        <p>Sensor and flock-health inputs aggregated into a clear dashboard for early detection and rapid response.</p>
-      </article>
-
-      <article class="card">
-        <h3>Industry Impact</h3>
-        <p>HPAI outbreaks affect production, livelihoods, and food security — our tools help quantify and mitigate those risks.</p>
-      </article>
-
-      <article class="card">
-        <h3>Best Practices</h3>
-        <p>Biosecurity checklists, vaccination guidance, and simple farm management steps tailored for Philippine conditions.</p>
-      </article>
-
-      <article class="card">
-        <h3>Resources</h3>
-        <p>Links to DA-ATI, BFAR guidelines, research briefs, and local support networks for farmers.</p>
-      </article>
-    </section>
-
-    <section id="history" class="history">
-      <h2>Monitoring History & Outbreak Summary</h2>
-      <p>Summary of recent detection events, trends by region, and notes for incident response teams.</p>
-      <div class="history-list">
-        <div class="history-item"><strong>Region:</strong> Central Luzon — <em>Increased alerts</em></div>
-        <div class="history-item"><strong>Region:</strong> Western Visayas — <em>Stable</em></div>
-        <div class="history-item"><strong>Region:</strong> Davao Region — <em>Watch</em></div>
-      </div>
-    </section>
-
-    <section id="settings" class="settings">
-      <h2>Settings</h2>
-      <p>Configure alert thresholds, add farm locations, and manage user access.</p>
-      <div class="settings-grid">
-        <div class="small-card">Alerts</div>
-        <div class="small-card">Farms</div>
-        <div class="small-card">Users</div>
-        <div class="small-card">Integrations</div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© CHICKENARIUM — Research project on HPAI and poultry resilience in the Philippines.</p>
-      <p>Contact: <a href="mailto:team@chickenarium.local">team@chickenarium.local</a></p>
+<section id="home" class="hero">
+  <div class="hero-left">
+    <h1>Protecting Philippine Chicken Farms from HPAI</h1>
+    <p class="lead">
+      CHICKENARIUM combines lightweight monitoring and practical guidance
+      to help farmers, vets, and policymakers reduce the risk and impact of
+      Highly Pathogenic Avian Influenza (HPAI).
+    </p>
+    <div class="hero-cta">
+      <a class="btn" href="#monitoring">View Monitoring</a>
+      <a class="btn ghost" href="#history">Read Reports</a>
     </div>
-  </footer>
+  </div>
+  <div class="hero-right">
+    <div class="illustration">🐣</div>
+  </div>
+</section>
 
-  <script>
-    // small menu toggle for mobile
-    document.addEventListener('DOMContentLoaded', ()=>{
-      const btn = document.getElementById('menuBtn');
-      const nav = document.getElementById('siteNav');
-      btn.addEventListener('click', ()=> nav.classList.toggle('open'));
-    });
-  </script>
+<!-- ====== INFO GRID (CLICK TO OPEN BROCHURE) ====== -->
+<section id="monitoring" class="info-grid">
+  <article class="card" onclick="openModal('m1')">
+    <h3>Real-time Monitoring</h3>
+    <p>Click to view details</p>
+  </article>
+
+  <article class="card" onclick="openModal('m2')">
+    <h3>Industry Impact</h3>
+    <p>Click to view details</p>
+  </article>
+
+  <article class="card" onclick="openModal('m3')">
+    <h3>Best Practices</h3>
+    <p>Click to view details</p>
+  </article>
+
+  <article class="card" onclick="openModal('m4')">
+    <h3>Resources</h3>
+    <p>Click to view details</p>
+  </article>
+</section>
+
+<section id="history" class="history">
+  <h2>Monitoring History & Outbreak Summary</h2>
+  <p>Summary of recent detection events, trends by region, and notes for incident response teams.</p>
+  <div class="history-list">
+    <div class="history-item"><strong>Region:</strong> Central Luzon — <em>Increased alerts</em></div>
+    <div class="history-item"><strong>Region:</strong> Western Visayas — <em>Stable</em></div>
+    <div class="history-item"><strong>Region:</strong> Davao Region — <em>Watch</em></div>
+  </div>
+</section>
+
+<section id="settings" class="settings">
+  <h2>Settings</h2>
+  <p>Configure alert thresholds, add farm locations, and manage user access.</p>
+  <div class="settings-grid">
+    <div class="small-card">Alerts</div>
+    <div class="small-card">Farms</div>
+    <div class="small-card">Users</div>
+    <div class="small-card">Integrations</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© CHICKENARIUM — Research project on HPAI and poultry resilience in the Philippines.</p>
+    <p>Contact: <a href="mailto:team@chickenarium.local">team@chickenarium.local</a></p>
+  </div>
+</footer>
+
+<!-- ====== POPUP BROCHURES ====== -->
+<div id="m1" class="modal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <h2>Real-time Monitoring</h2>
+    <p>
+      Uses AI-based vocal analysis and camera monitoring to detect
+      early symptoms of HPAI in chickens.
+    </p>
+  </div>
+</div>
+
+<div id="m2" class="modal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <h2>Industry Impact</h2>
+    <p>
+      Early detection helps reduce economic losses, prevent large-scale
+      outbreaks, and protect food security.
+    </p>
+  </div>
+</div>
+
+<div id="m3" class="modal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <h2>Best Practices</h2>
+    <p>
+      Includes biosecurity measures, isolation protocols, and immediate
+      reporting of suspected chickens.
+    </p>
+  </div>
+</div>
+
+<div id="m4" class="modal" onclick="closeModal(event)">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <h2>Resources</h2>
+    <p>
+      Access official DA, BFAR, and veterinary guidelines related to
+      Avian Influenza prevention and response.
+    </p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const btn = document.getElementById('menuBtn');
+    const nav = document.getElementById('siteNav');
+    btn.addEventListener('click', ()=> nav.classList.toggle('open'));
+  });
+
+  function openModal(id){
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(e){
+    if(!e || e.target.classList.contains('modal')){
+      document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+    }
+  }
+</script>
 </body>
 </html>
