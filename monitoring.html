@@ -23,7 +23,7 @@
     /* VIDEO */
     .video-container {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .video-wrapper {
@@ -44,6 +44,38 @@
       object-fit: cover;
     }
 
+    /* ZONE GRID */
+    .zone-wrapper {
+      max-width: 300px;
+      margin: 25px auto;
+      text-align: center;
+    }
+
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .zone {
+      padding: 18px;
+      border-radius: 6px;
+      background: #eee;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .zone.active {
+      background: #f44336;
+      color: #fff;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(244,67,54,0.7); }
+      100% { box-shadow: 0 0 0 14px rgba(244,67,54,0); }
+    }
+
     /* STATUS */
     .status-banner {
       padding: 15px;
@@ -53,6 +85,12 @@
       background: #d4edda;
       border: 1px solid #c3e6cb;
       color: #155724;
+    }
+
+    .status-banner.problem {
+      background: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
     }
 
     /* TABLE */
@@ -120,20 +158,29 @@
   <!-- VIDEO -->
   <div class="video-container">
     <div class="video-wrapper">
-      <video
-        id="chickenCam"
-        autoplay
-        muted
-        playsinline
-        controls>
+      <video autoplay muted playsinline controls>
         <source src="http://RASPBERRY_PI_IP:5000/video_feed" type="video/mp4">
-        Your browser does not support the video tag.
       </video>
     </div>
-
-    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+    <p style="font-size:0.9rem;color:#666;margin-top:8px">
       <span style="color:red">●</span> Live Stream
     </p>
+  </div>
+
+  <!-- ZONE GRID -->
+  <div class="zone-wrapper">
+    <strong>Detected Sound Location</strong>
+    <div class="zone-grid">
+      <div class="zone" id="A">A</div>
+      <div class="zone" id="B">B</div>
+      <div class="zone" id="C">C</div>
+      <div class="zone" id="D">D</div>
+      <div class="zone" id="E">E</div>
+      <div class="zone" id="F">F</div>
+      <div class="zone" id="G">G</div>
+      <div class="zone" id="H">H</div>
+      <div class="zone" id="I">I</div>
+    </div>
   </div>
 
   <!-- STATUS -->
@@ -153,7 +200,7 @@
     </thead>
     <tbody id="monitoringBody">
       <tr>
-        <td colspan="4" style="text-align:center; color:#888;">
+        <td colspan="4" style="text-align:center;color:#888">
           Waiting for detection events...
         </td>
       </tr>
@@ -169,14 +216,33 @@
 </footer>
 
 <script>
-  // Mobile menu toggle
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('menuBtn');
-    const nav = document.getElementById('siteNav');
-    if (btn) btn.addEventListener('click', () => nav.classList.toggle('open'));
-  });
+  // Mobile menu
+  document.getElementById("menuBtn")
+    ?.addEventListener("click", () =>
+      document.getElementById("siteNav").classList.toggle("open")
+    );
 
-  // Fetch detection events from Raspberry Pi
+  function clearZones(){
+    document.querySelectorAll(".zone")
+      .forEach(z => z.classList.remove("active"));
+  }
+
+  function highlight(zone){
+    clearZones();
+
+    const map = {
+      "A-B-C": ["A","B","C"],
+      "D-E-F": ["D","E","F"],
+      "G-H-I": ["G","H","I"]
+    };
+
+    if(map[zone]){
+      map[zone].forEach(id =>
+        document.getElementById(id).classList.add("active")
+      );
+    }
+  }
+
   setInterval(() => {
     fetch("http://RASPBERRY_PI_IP:5000/events")
       .then(res => res.json())
@@ -184,9 +250,9 @@
         const body = document.getElementById("monitoringBody");
         body.innerHTML = "";
 
-        if (data.length === 0) {
-          body.innerHTML =
-            `<tr><td colspan="4" style="text-align:center;color:#888">
+        if(data.length === 0){
+          body.innerHTML = `
+            <tr><td colspan="4" style="text-align:center;color:#888">
               Waiting for detection events...
             </td></tr>`;
           return;
@@ -201,6 +267,17 @@
               <td>${e.remark}</td>
             </tr>`;
         });
+
+        highlight(data[0].zone);
+
+        const farm = document.getElementById("farmStatus");
+        if(data[0].status !== "Healthy"){
+          farm.textContent = "Farm Status: Problem Detected";
+          farm.classList.add("problem");
+        } else {
+          farm.textContent = "Farm Status: Healthy";
+          farm.classList.remove("problem");
+        }
       });
   }, 2000);
 </script>
