@@ -186,3 +186,23 @@ html,body{
 }
 
 .card:hover{transform:translateY(-4px);transition:transform 220ms}
+
+/* Carousel styles */
+.carousel{position:relative;overflow:hidden;border-radius:12px;background:var(--card);box-shadow:0 8px 24px rgba(20,10,0,0.04);width:100%;max-width:420px}
+.carousel-track{display:flex;transition:transform 520ms ease}
+.carousel-slide{min-width:100%;flex:0 0 100%}
+.carousel-slide img{width:100%;height:220px;object-fit:cover;display:block}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.35);color:#fff;border:0;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.carousel-btn.prev{left:10px}
+.carousel-btn.next{right:10px}
+.carousel-dots{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;display:flex;gap:8px}
+.carousel-dots button{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.6);border:0;cursor:pointer}
+.carousel-dots button.active{background:#fff;box-shadow:0 0 0 3px rgba(0,0,0,0.06)}
+
+@media (max-width:880px){
+  .carousel-slide img{height:180px}
+}
+@media (max-width:480px){
+  .carousel-slide img{height:140px}
+  .carousel-btn{width:30px;height:30px}
+}
