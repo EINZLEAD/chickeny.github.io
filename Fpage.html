@@ -70,7 +70,16 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="illustration">🐣</div>
+    <div class="carousel" id="homeCarousel">
+      <div class="carousel-track">
+        <div class="carousel-slide"><img src="images/chicken1.jpg" alt="Farm view 1"></div>
+        <div class="carousel-slide"><img src="images/chicken2.jpg" alt="Farm view 2"></div>
+        <div class="carousel-slide"><img src="images/chicken3.jpg" alt="Farm view 3"></div>
+      </div>
+      <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+      <button class="carousel-btn next" aria-label="Next slide">›</button>
+      <div class="carousel-dots" aria-hidden="false"></div>
+    </div>
   </div>
 </section>
 
@@ -98,12 +107,13 @@
 </section>
 
 <section id="history" class="history">
-  <h2>Monitoring History & Outbreak Summary</h2>
-  <p>Summary of recent detection events, trends by region, and notes for incident response teams.</p>
+  <h2>Farm Status & Recommendations</h2>
+  <p>Current health status and recommended actions for San Miguel Poultry.</p>
   <div class="history-list">
-    <div class="history-item"><strong>Region:</strong> Central Luzon — <em>Increased alerts</em></div>
-    <div class="history-item"><strong>Region:</strong> Western Visayas — <em>Stable</em></div>
-    <div class="history-item"><strong>Region:</strong> Davao Region — <em>Watch</em></div>
+    <div class="history-item">
+      <strong>Farm:</strong> San Miguel Poultry — <em>Status: Increased alerts</em>
+      <div class="recommendation"><strong>Recommendation:</strong> Increase biosecurity, isolate affected flocks, restrict movement, and notify your veterinarian immediately.</div>
+    </div>
   </div>
 </section>
 
@@ -187,6 +197,52 @@
       document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
     }
   }
+
+  // ====== Simple responsive carousel for homepage ======
+  (function(){
+    const carousel = document.getElementById('homeCarousel');
+    if(!carousel) return;
+    const track = carousel.querySelector('.carousel-track');
+    const slides = Array.from(track.children);
+    const prev = carousel.querySelector('.prev');
+    const next = carousel.querySelector('.next');
+    const dotsContainer = carousel.querySelector('.carousel-dots');
+    let current = 0;
+
+    slides.forEach((s,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'dot';
+      if(i===0) btn.classList.add('active');
+      btn.addEventListener('click', ()=> goTo(i));
+      dotsContainer.appendChild(btn);
+    });
+
+    function update(){
+      track.style.transform = `translateX(${-current*100}% )`;
+      Array.from(dotsContainer.children).forEach((b,i)=> b.classList.toggle('active', i===current));
+    }
+    function goTo(i){ current = (i + slides.length) % slides.length; update(); }
+
+    prev.addEventListener('click', ()=> goTo(current-1));
+    next.addEventListener('click', ()=> goTo(current+1));
+
+    let autoplay = setInterval(()=> goTo(current+1), 4000);
+    carousel.addEventListener('mouseenter', ()=> clearInterval(autoplay));
+    carousel.addEventListener('mouseleave', ()=> autoplay = setInterval(()=> goTo(current+1), 4000));
+
+    // touch support
+    let startX = 0;
+    track.addEventListener('touchstart', e=> startX = e.touches[0].clientX, {passive:true});
+    track.addEventListener('touchend', e=>{
+      const endX = e.changedTouches[0].clientX;
+      if(startX - endX > 30) goTo(current+1);
+      if(endX - startX > 30) goTo(current-1);
+    });
+
+    // ensure initial layout
+    update();
+    window.addEventListener('resize', update);
+  })();
 </script>
 </body>
 </html>
