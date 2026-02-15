@@ -44,3 +44,37 @@ html{font-size:calc(16px * var(--scale));}
 .scale-large{--scale:1.12}
 .scale-medium{--scale:1.06}
 .scale-small{--scale:0.90}
+
+/* css/media.css */
+
+/* TABLET */
+@media (max-width:880px){
+  .hero{flex-direction:column;align-items:flex-start}
+  .hero-right{width:100%;display:flex;justify-content:flex-start}
+  .carousel-slide img{height:180px}
+}
+
+/* MOBILE */
+@media (max-width:640px){
+  .nav-links{display:none}
+  .menu-btn{display:inline-block}
+  
+  .nav-links.open{
+    display:flex;
+    position:absolute;
+    right:16px;
+    top:56px;
+    background:var(--card);
+    padding:10px;
+    border-radius:10px;
+    box-shadow:0 12px 30px rgba(20,10,0,0.08);
+    flex-direction:column
+  }
+  .hero-right{order:2}
+}
+
+/* SMALL MOBILE */
+@media (max-width:480px){
+  .carousel-slide img{height:140px}
+  .carousel-btn{width:30px;height:30px}
+}

@@ -1,21 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     
-    // FETCH DATA
+    // --- PART 1: LOAD SETTINGS (Yung kanina) ---
     fetch("api/get_settings.php")
     .then(res => res.json())
     .then(data => {
-        if(data.redirect) {
-            window.location.href = "login.html";
-            return;
-        }
-
-        // Set Username
-        if(document.getElementById("username")) document.getElementById("username").value = data.username || "";
-
+        if(data.redirect) { window.location.href = "login.html"; return; }
         if(data.found) {
-            console.log("Data Found!", data);
-            
-            // Populate Fields
+            setVal("username", data.username);
             setVal("farm_name", data.farm_name);
             setVal("farm_id", data.farm_id); 
             setVal("farm_type", data.farm_type);
@@ -24,45 +15,25 @@ document.addEventListener("DOMContentLoaded", function() {
             setVal("owner_name", data.owner_name);
             setVal("owner_email", data.owner_email);
             setVal("owner_phone", data.owner_phone);
-
-            // Kung galing ito sa user_id=0, i-save natin agad para maging user_id=1 na
-            if(data.is_orphan) {
-                console.log("Fixing orphaned data...");
-                document.getElementById("saveBtn").click(); // Auto-save to claim ownership
-            }
-
-        } else {
-            console.log("No Data. New User.");
-            // Dito lang dapat lumabas ang Random ID kung talagang bago
-            setVal("farm_id", data.farm_id);
-            // I-clear ang "Loading..." text sa ibang fields
-            setVal("farm_name", "");
-            setVal("farm_address", ""); // Clear text area
         }
     })
     .catch(err => console.error("Error:", err));
 
     function setVal(id, val) {
         let el = document.getElementById(id);
-        if(el) el.value = val || ""; // Kung null, gawing blank
+        if(el) el.value = val || ""; 
     }
 
-    // --- SAVE BUTTON LOGIC (Yung binigay ko sayo kanina) ---
+    // --- PART 2: SAVE SETTINGS (Yung kanina) ---
     const saveBtn = document.getElementById("saveBtn");
     if(saveBtn) {
         saveBtn.addEventListener("click", function(e) {
-            // ... (Yung dating code na binigay ko sa previous reply) ...
-            // Siguraduhin lang na yung save_settings.php mo ay yung UPDATED version galing sa STEP 3 ng previous reply ko.
-             e.preventDefault();
-            
-            const btn = document.getElementById("saveBtn");
-            const msg = document.getElementById("msg"); // Make sure may <p id="msg"></p> ka sa HTML
-
-            btn.innerText = "Saving...";
+            e.preventDefault();
+            const msg = document.getElementById("msg");
+            saveBtn.innerText = "Saving...";
             
             const payload = {
                 farm_name: document.getElementById("farm_name").value,
-                farm_id: document.getElementById("farm_id").value,
                 farm_type: document.getElementById("farm_type").value,
                 number_of_chickens: document.getElementById("number_of_chickens").value,
                 farm_location: document.getElementById("farm_location").value,
@@ -78,15 +49,99 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(res => res.json())
             .then(data => {
+                saveBtn.innerText = "Save Changes";
                 if(data.success) {
-                    // Success!
-                    btn.innerText = "Save Changes";
-                    if(msg) { msg.innerText = "✅ Saved!"; msg.style.color = "green"; }
+                    msg.innerText = "✅ Saved!"; msg.style.color = "green";
                     setTimeout(() => location.reload(), 1000); 
                 } else {
-                    btn.innerText = "Save Changes";
-                    if(msg) { msg.innerText = "❌ " + data.error; msg.style.color = "red"; }
+                    msg.innerText = "❌ " + data.error; msg.style.color = "red";
                 }
+            });
+        });
+    }
+
+    // --- PART 3: CHANGE PASSWORD MODAL (ETO ANG BAGO!) ---
+    
+    const modal = document.getElementById("passwordModal");
+    const openBtn = document.getElementById("openPassModalBtn");
+    const closeBtn = document.getElementById("closePassModal");
+    const passForm = document.getElementById("changePassForm");
+    const passMsg = document.getElementById("passMsg");
+
+    // Open Modal
+    if(openBtn) {
+        openBtn.addEventListener("click", () => {
+            modal.style.display = "block";
+            passForm.reset(); // Clear previous inputs
+            passMsg.innerText = ""; 
+        });
+    }
+
+    // Close Modal
+    if(closeBtn) {
+        closeBtn.addEventListener("click", () => modal.style.display = "none");
+    }
+
+    // Close if clicked outside
+    window.addEventListener("click", (e) => {
+        if (e.target == modal) modal.style.display = "none";
+    });
+
+    // Handle Form Submit
+    if(passForm) {
+        passForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const currentPass = document.getElementById("current_password").value;
+            const newPass = document.getElementById("new_password").value;
+            const confirmPass = document.getElementById("confirm_new_password").value;
+            const btn = passForm.querySelector("button");
+
+            // Validation
+            if(newPass !== confirmPass) {
+                passMsg.innerText = "❌ New passwords do not match!";
+                passMsg.style.color = "red";
+                return;
+            }
+
+            if(newPass.length < 6) {
+                passMsg.innerText = "❌ Password must be at least 6 characters.";
+                passMsg.style.color = "red";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Updating...";
+
+            fetch("api/change_password.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    current_password: currentPass, 
+                    new_password: newPass 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerText = "Update Password";
+
+                if(data.success) {
+                    passMsg.innerText = "✅ " + data.message;
+                    passMsg.style.color = "green";
+                    setTimeout(() => {
+                        modal.style.display = "none";
+                        passForm.reset();
+                    }, 1500);
+                } else {
+                    passMsg.innerText = "❌ " + data.error;
+                    passMsg.style.color = "red";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btn.disabled = false;
+                passMsg.innerText = "❌ Server Error.";
             });
         });
     }

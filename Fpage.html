@@ -4,39 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CHICKENARIUM — Front Page</title>
+  
   <link rel="stylesheet" href="css/Fpage.css" />
   <link rel="stylesheet" href="css/media.css" />
-
-  <!-- ADDITIONAL CSS (FOR POPUP ONLY) -->
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: #fff;
-      max-width: 600px;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-    .modal-content h2 {
-      margin-top: 0;
-    }
-    .modal-close {
-      float: right;
-      font-size: 22px;
-      cursor: pointer;
-    }
-    .card {
-      cursor: pointer;
-    }
-  </style>
 </head>
 
 <body>
@@ -48,7 +18,6 @@
         <a href="Fpage.html" class="active">Home</a>
         <a href="monitoring.html">Monitoring</a>
         <a href="history.html">History</a>
-        <a href="farm.html">Farm</a>
         <a href="settings.html">Settings</a>
       </nav>
     </div>
@@ -83,7 +52,6 @@
   </div>
 </section>
 
-<!-- ====== INFO GRID (CLICK TO OPEN BROCHURE) ====== -->
 <section id="monitoring" class="info-grid">
   <article class="card" onclick="openModal('m1')">
     <h3>Real-time Monitoring</h3>
@@ -137,7 +105,6 @@
   </div>
 </footer>
 
-<!-- ====== POPUP BROCHURES ====== -->
 <div id="m1" class="modal" onclick="closeModal(event)">
   <div class="modal-content">
     <span class="modal-close" onclick="closeModal()">×</span>

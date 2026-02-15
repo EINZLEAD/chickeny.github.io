@@ -1,12 +1,17 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "chickenarium";
+// FILE: api/db.php
+$servername = "localhost";
+$username = "root";
+$password = ""; 
+$dbname = "chickenarium"; // <--- ETO ANG CORRECT DATABASE MO
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
+// Check connection
 if ($conn->connect_error) {
-    die(json_encode(["error" => "DB Connection Failed: " . $conn->connect_error]));
+    // Return JSON error kapag hindi maka-connect
+    header('Content-Type: application/json');
+    die(json_encode(["status" => "error", "message" => "DB Connection Failed: " . $conn->connect_error]));
 }
 ?>

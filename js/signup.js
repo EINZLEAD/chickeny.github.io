@@ -1,54 +1,73 @@
+// FILE: js/signup.js
 document.getElementById("signupForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const fullname = document.getElementById("fullname").value;
-    const email = document.getElementById("email").value;
-    const username = document.getElementById("username").value;
+    const note = document.getElementById("note");
+    const btn = document.querySelector('button[type="submit"]');
+
+    note.innerText = "⏳ Processing...";
+    note.style.color = "#F7941E";
+    btn.disabled = true;
+
     const password = document.getElementById("password").value;
     const confirm = document.getElementById("confirm_password").value;
-    const note = document.getElementById("note");
 
-    // Simple validation
     if(password !== confirm) {
         note.innerText = "❌ Passwords do not match!";
         note.style.color = "red";
+        btn.disabled = false;
         return;
     }
 
-    if(password.length < 6) {
-        note.innerText = "❌ Password must be at least 6 characters.";
-        note.style.color = "red";
-        return;
-    }
-
+    // Prepare Payload
     const payload = {
-        fullname: fullname,
-        email: email,
-        username: username,
-        password: password
+        fullname: document.getElementById("fullname").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        username: document.getElementById("username").value,
+        password: password,
+        farm_name: document.getElementById("farm_name").value,
+        farm_location: document.getElementById("farm_location").value,
+        farm_type: document.getElementById("farm_type").value,
+        chicken_count: document.getElementById("chicken_count").value,
+        units: document.getElementById("units").value,
+        notify_sms: document.querySelector('input[name="notify_sms"]').checked,
+        notify_email: document.querySelector('input[name="notify_email"]').checked,
+        enable_system: document.querySelector('input[name="enable_system"]').checked
     };
 
-    fetch("api/signup.php", {
+    fetch("api/signup.php", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            note.innerText = "✅ Account created! Redirecting...";
-            note.style.color = "green";
-            setTimeout(() => {
-                window.location.href = "login.html"; // Redirect sa login
-            }, 2000);
-        } else {
-            note.innerText = "❌ " + (data.error || "Signup failed");
+    .then(res => res.text()) // Get text first to see PHP errors
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if(data.status === 'success') {
+                note.innerText = "✅ " + data.message;
+                note.style.color = "green";
+                setTimeout(() => {
+                    window.location.href = "login.html"; 
+                }, 2000);
+            } else {
+                note.innerText = "❌ " + (data.message || "Signup failed");
+                note.style.color = "red";
+                btn.disabled = false;
+            }
+        } catch (err) {
+            console.error("RAW SERVER OUTPUT:", text);
+            // Dito natin makikita kung ano talaga ang mali
+            note.innerText = "❌ Server Error: " + text.substring(0, 50) + "... (Check Console)";
             note.style.color = "red";
+            btn.disabled = false;
         }
     })
     .catch(err => {
-        console.error(err);
-        note.innerText = "❌ Connection Error";
+        console.error("NETWORK ERROR:", err);
+        note.innerText = "❌ Connection Failed";
         note.style.color = "red";
+        btn.disabled = false;
     });
 });

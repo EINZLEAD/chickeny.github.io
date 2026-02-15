@@ -1,52 +1,46 @@
 <?php
+// FILE: api/get_settings.php
 session_start();
 header("Content-Type: application/json");
 require "db.php";
 
-// 1. Check kung Login
+// 1. Check kung naka-login
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["redirect" => "login.html"]);
+    echo json_encode(["redirect" => true]);
     exit;
 }
 
 $user_id = $_SESSION['user_id'];
-$username = $_SESSION['username'];
 
-// --- AUTO-FIX LOGIC START ---
+// 2. Kunin ang data sa USERS table at FARMS table (JOIN)
+$sql = "SELECT 
+            u.fullname, u.email, u.phone, u.username, 
+            f.farm_name, f.farm_code, f.farm_type, f.chicken_count, f.location 
+        FROM users u 
+        LEFT JOIN farms f ON u.id = f.user_id 
+        WHERE u.id = ?";
 
-// Check 1: Meron na bang record ang user na ito?
-$check_me = $conn->query("SELECT id FROM farm_settings WHERE user_id = $user_id LIMIT 1");
-
-if ($check_me->num_rows > 0) {
-    // SCENARIO A: Meron ka nang sariling record.
-    // ACTION: Burahin lahat ng user_id = 0 para walang duplicate na kalat.
-    $conn->query("DELETE FROM farm_settings WHERE user_id = 0");
-} else {
-    // SCENARIO B: Wala ka pang record, pero baka merong naiwan na user_id = 0 (galing sa registration).
-    // ACTION: Angkinin mo 'yun (Ilipat sa pangalan mo).
-    $conn->query("UPDATE farm_settings SET user_id = $user_id WHERE user_id = 0");
-}
-
-// --- AUTO-FIX LOGIC END ---
-
-
-// 2. Ngayon, kunin na natin ang malinis na data
-$stmt = $conn->prepare("SELECT * FROM farm_settings WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+$stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
-    $row['found'] = true;
-    $row['username'] = $username;
-    echo json_encode($row);
-} else {
-    // Kung talagang wala (Fresh Account)
+    // 3. Ibalik ang data sa JSON format na tugma sa HTML IDs mo
     echo json_encode([
-        "found" => false,
-        "username" => $username,
-        "farm_id" => "FARM-" . date("Y") . "-" . strtoupper(bin2hex(random_bytes(2)))
+        "found" => true,
+        "username" => $row['username'],
+        "farm_name" => $row['farm_name'],
+        "farm_id" => $row['farm_code'], // farm_code ang tawag sa DB, farm_id sa HTML
+        "farm_type" => $row['farm_type'],
+        "number_of_chickens" => $row['chicken_count'],
+        "farm_location" => $row['location'],
+        "owner_name" => $row['fullname'],
+        "owner_email" => $row['email'],
+        "owner_phone" => $row['phone']
     ]);
+} else {
+    echo json_encode(["found" => false]);
 }
 
 $stmt->close();
