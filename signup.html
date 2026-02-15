@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/login.css" />
+  
+  <link rel="stylesheet" href="css/signup.css" />
   <link rel="stylesheet" href="css/media.css" />
+  
   <title>CHICKENARIUM — Sign Up</title>
 </head>
 <body>
@@ -27,33 +29,80 @@
           </svg>
         </div>
         <h1>CHICKENARIUM</h1>
-        <p class="subtitle">Create New Account</p>
+        <p class="subtitle">Create Account & Setup Farm</p>
       </header>
 
       <form id="signupForm" class="login-form" novalidate>
         
+        <div class="section-header">👤 Owner Details</div>
+
         <label for="fullname">Full Name</label>
-        <input type="text" id="fullname" name="fullname" required />
+        <input type="text" id="fullname" name="fullname" placeholder="Juan Dela Cruz" required />
 
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required />
+        <input type="email" id="email" name="email" placeholder="juandelacruz@gmail.com" required />
 
-        <label for="username">Username</label>
-        <input id="username" name="username" required />
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="09123456789" required />
 
-        <label for="password">Password</label>
-        <div class="password-row">
-          <input id="password" name="password" type="password" required />
-          </div>
-
-        <label for="confirm_password">Confirm Password</label>
-        <div class="password-row">
-          <input id="confirm_password" name="confirm_password" type="password" required />
+        <div class="row">
+            <div class="col">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required />
+            </div>
         </div>
 
-        <div class="actions" style="justify-content: space-between;">
-            <a href="login.html" style="text-decoration:none; color:#F7941E; font-size:0.9rem;">Already have an account?</a>
-            <button type="submit" class="btn">Sign Up</button>
+        <div class="row">
+            <div class="col">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" required />
+            </div>
+            <div class="col">
+                <label for="confirm_password">Confirm</label>
+                <input id="confirm_password" name="confirm_password" type="password" required />
+            </div>
+        </div>
+
+        <div class="section-header">🐔 Farm Details</div>
+
+        <label for="farm_name">Farm Name</label>
+        <input type="text" id="farm_name" name="farm_name" placeholder="My Chicken Farm" required />
+
+        <label for="farm_location">Farm Address</label>
+        <textarea id="farm_location" name="farm_location" placeholder="Barangay, City, Province"></textarea>
+
+        <label for="farm_type">Type of Farm</label>
+        <select id="farm_type" name="farm_type">
+            <option value="Broiler">Broiler (Meat)</option>
+            <option value="Layer">Layer (Eggs)</option>
+            <option value="Backyard">Backyard / Native</option>
+        </select>
+
+        <div class="row">
+            <div class="col">
+                <label for="chicken_count">Capacity</label>
+                <input type="number" id="chicken_count" name="chicken_count" value="500">
+            </div>
+            <div class="col">
+                <label for="units">Units</label>
+                <select id="units" name="units">
+                    <option value="metric">Metric (kg/cm)</option>
+                    <option value="imperial">Imperial (lbs/in)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section-header">🔔 Settings</div>
+        
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="notify_sms" checked> SMS</label>
+            <label><input type="checkbox" name="notify_email" checked> Email</label>
+            <label><input type="checkbox" name="enable_system" checked> <b>Alerts</b></label>
+        </div>
+
+        <div class="actions">
+            <a href="login.html" style="text-decoration:none; color:#F7941E; font-weight:bold; font-size:0.9rem;">← Login</a>
+            <button type="submit" class="btn">Register All</button>
         </div>
 
         <p class="note" id="note" aria-live="polite"></p>
