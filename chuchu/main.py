@@ -1,7 +1,7 @@
 import os
 
 def setup_directory_structure():
-    base_dir = "HPAI_Detection_System"
+    base_dir = "." # Setup sa current directory
     
     # Define sub-directories based on the paper's needs
     sub_dirs = [
