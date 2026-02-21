@@ -40,8 +40,8 @@ def train(data_directory):
 
     # Train for 15 epochs
     model.fit(train_ds, epochs=15)
-    model.save('models/checkpoints/hpai_detector.h5')
-    print("\nModel saved to models/checkpoints/hpai_detector.h5")
+    model.save('models/checkpoints/hpai_detector.keras')
+    print("\nModel saved to models/checkpoints/hpai_detector.keras")
 
 if __name__ == "__main__":
     # Direkta na itong magte-train kapag ni-run
